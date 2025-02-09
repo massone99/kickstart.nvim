@@ -191,6 +191,42 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 vim.keymap.set('n', '<leader>e', ':Ntree<CR>', { noremap = true, silent = true, desc = 'Toggle NvimTree' })
 
+-- [[ Refactoring.nvim keymaps ]]
+-- Estrae una funzione dal codice selezionato in modalità visuale
+vim.keymap.set('x', '<leader>re', function()
+  require('refactoring').refactor 'Extract Function'
+end, { desc = 'Extract Function' })
+
+-- Estrae una funzione dal codice selezionato in modalità visuale e la salva in un nuovo file
+vim.keymap.set('x', '<leader>rf', function()
+  require('refactoring').refactor 'Extract Function To File'
+end, { desc = 'Extract Function To File' })
+
+-- Estrae una variabile dal codice selezionato in modalità visuale
+vim.keymap.set('x', '<leader>rv', function()
+  require('refactoring').refactor 'Extract Variable'
+end, { desc = 'Extract Variable' })
+
+-- Inlines a function in normal mode
+vim.keymap.set('n', '<leader>rI', function()
+  require('refactoring').refactor 'Inline Function'
+end, { desc = 'Inline Function' })
+
+-- Inlines a variable in both normal and visual mode
+vim.keymap.set({ 'n', 'x' }, '<leader>ri', function()
+  require('refactoring').refactor 'Inline Variable'
+end, { desc = 'Inline Variable' })
+
+-- Estrae un blocco di codice in modalità normale
+vim.keymap.set('n', '<leader>rb', function()
+  require('refactoring').refactor 'Extract Block'
+end, { desc = 'Extract Block' })
+
+-- Estrae un blocco di codice in modalità normale e lo salva in un nuovo file
+vim.keymap.set('n', '<leader>rbf', function()
+  require('refactoring').refactor 'Extract Block To File'
+end, { desc = 'Extract Block To File' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -238,6 +274,18 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
+
+  {
+    'ThePrimeagen/refactoring.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    lazy = false,
+    config = function()
+      require('refactoring').setup()
+    end,
+  },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
