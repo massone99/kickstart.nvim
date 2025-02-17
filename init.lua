@@ -149,7 +149,16 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- [[CopilotChat Keymaps]]
-vim.keymap.set('n', '<leader>cc', ':CopilotChat<CR>', { desc = 'Toggle Copilot Chat' })
+local copilot_chat_open = false
+
+vim.keymap.set('n', '<leader>cc', function()
+  if copilot_chat_open then
+    vim.cmd 'CopilotChatClose'
+  else
+    vim.cmd 'CopilotChat'
+  end
+  copilot_chat_open = not copilot_chat_open
+end, { desc = 'Toggle Copilot Chat' })
 
 -- [[ Clipboard ]]
 vim.schedule(function()
