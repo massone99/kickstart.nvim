@@ -110,14 +110,6 @@ vim.opt.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 
--- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
-
 -- Enable break indent
 vim.opt.breakindent = true
 
@@ -156,6 +148,13 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- [[CopilotChat Keymaps]]
+vim.keymap.set('n', '<leader>cc', ':CopilotChat<CR>', { desc = 'Toggle Copilot Chat' })
+
+-- [[ Clipboard ]]
+vim.schedule(function()
+  vim.opt.clipboard = 'unnamedplus'
+end)
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -275,6 +274,27 @@ require('lazy').setup({
   -- Use `opts = {}` to force a plugin to be loaded.
   --
 
+  {
+    'github/copilot.vim',
+  },
+  {
+    'zbirenbaum/copilot-cmp',
+    config = function()
+      require('copilot_cmp').setup()
+    end,
+  },
+  {
+    'CopilotC-Nvim/CopilotChat.nvim',
+    dependencies = {
+      { 'github/copilot.vim' }, -- or zbirenbaum/copilot.lua
+      { 'nvim-lua/plenary.nvim', branch = 'master' }, -- for curl, log and async functions
+    },
+    build = 'make tiktoken', -- Only on MacOS or Linux
+    opts = {
+      -- See Configuration section for options
+    },
+    -- See Commands section for default commands if you want to lazy load on them
+  },
   {
     'ThePrimeagen/refactoring.nvim',
     dependencies = {
@@ -899,7 +919,11 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+      -- DARK MODE
       vim.cmd.colorscheme 'tokyonight-night'
+
+      -- LIGHT MODE
+      --vim.cmd.colorscheme 'tokyonight-day'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
